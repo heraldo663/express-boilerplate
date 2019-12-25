@@ -8,11 +8,11 @@ class SessionController {
     const user = await User.findOne({ email });
 
     if (!user) {
-      res.status(400).json({ error: "User not found" });
+      res.status(400).json({ errors: [{ msg: "User not found" }] });
     }
 
     if (!(await user.compareHash(password))) {
-      return res.status(400).json({ error: "Invalid password" });
+      return res.status(400).json({ errors: [{ msg: "Invalid password" }] });
     }
 
     return res.json({

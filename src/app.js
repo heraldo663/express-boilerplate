@@ -8,22 +8,23 @@ const validate = require("express-validation");
 const Youch = require("youch");
 const Sentry = require("@sentry/node");
 
-const config = require("./config");
+const database = require("./config/database");
+const sentry = require("./config/sentry");
 
 class App {
   constructor() {
     this.express = express();
 
-    this.sentry();
-    this.middleweares();
     this.database();
+    this.middleweares();
     this.routes();
     this.exception();
+    this.sentry();
   }
 
   sentry() {
     Sentry.init({
-      dsn: config.sentry.dsn
+      dsn: sentry.dsn
     });
   }
 
@@ -35,10 +36,16 @@ class App {
     this.express.use(cors());
   }
 
-  database() {
-    mongoose.connect(config.database.uri, {
+  async database() {
+    if (process.env.NODE_ENV === "test") {
+      const { MongoMemoryServer } = require('mongodb-memory-server');
+      const mongod = new MongoMemoryServer();
+      database.uri = await mongod.getConnectionString();
+    }
+    mongoose.connect(database.uri, {
       useNewUrlParser: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useUnifiedTopology: true
     });
   }
 

@@ -1,10 +1,10 @@
 const kue = require("kue");
 const Sentry = require("@sentry/node");
 const jobs = require("../jobs");
-const config = require("../../config");
+const redisConfig = require("../../config/redis");
 
 const Queue = kue.createQueue({
-  redis: config.redis
+  redis: redisConfig.redis
 });
 
 Queue.process(jobs.PurchaseMail.key, jobs.PurchaseMail.handle);

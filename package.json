@@ -4,15 +4,22 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "cross-env NODE_ENV=production node src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
+    "test:watch": "cross-env NODE_ENV=test jest --watch"
   },
   "devDependencies": {
+    "cross-env": "^6.0.3",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-prettier": "^3.0.1",
+    "faker": "^4.1.0",
+    "jest": "^24.9.0",
+    "mongodb-memory-server": "^6.1.1",
     "nodemon": "^1.19.0",
-    "prettier": "^1.17.0"
+    "prettier": "^1.17.0",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "@sentry/node": "^5.1.2",

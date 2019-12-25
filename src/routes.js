@@ -4,8 +4,11 @@ const handle = require("express-async-handler");
 
 const authMiddelware = require("./app/middlewares/auth");
 
-const controllers = require("./app/controller");
-const validators = require("./app/validators");
+const UserController = require("./app/controller/UserController");
+const SessionController = require("./app/controller/SessionController");
+
+const UserValidator = require("./app/validators/User");
+const SessionValidator = require("./app/validators/Session");
 
 const routes = express.Router();
 
@@ -18,20 +21,15 @@ routes.get("/", (req, res) => {
 /**
  * Register, Login Routes
  */
-routes.post(
-  "/users",
-  validate(validators.User),
-  handle(controllers.UserController.store)
-);
+routes.post("/users", validate(UserValidator), handle(UserController.store));
 routes.post(
   "/sessions",
-  validate(validators.Session),
-  handle(controllers.SessionController.store)
+  validate(SessionValidator),
+  handle(SessionController.store)
 );
 
 /**
- * Authentication middleware
+ * Authenticated Routes
  */
-routes.use(authMiddelware);
 
 module.exports = routes;

@@ -2,9 +2,9 @@ const nodemailer = require("nodemailer");
 const path = require("path");
 const expHbs = require("express-handlebars");
 const mailHbs = require("nodemailer-express-handlebars");
-const config = require("../../config");
+const mail = require("../../config/mail");
 
-const trasnport = nodemailer.createTransport(config.mail);
+const trasnport = nodemailer.createTransport(mail);
 
 const viewPath = path.resolve(__dirname, "..", "views", "emails");
 
