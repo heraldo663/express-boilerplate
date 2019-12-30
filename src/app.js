@@ -3,19 +3,19 @@ const express = require("express");
 const logger = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const validate = require("express-validation");
 const Youch = require("youch");
 const Sentry = require("@sentry/node");
+const path = require("path");
 
-const database = require("./config/database");
 const sentry = require("./config/sentry");
+const database = require("./database");
 
 class App {
   constructor() {
-    this.express = express();
+    this.server = express();
+    this.connection = database();
 
-    this.database();
     this.middleweares();
     this.routes();
     this.exception();
@@ -29,35 +29,22 @@ class App {
   }
 
   middleweares() {
-    this.express.use(Sentry.Handlers.requestHandler());
-    this.express.use(express.json());
-    this.express.use(logger("dev"));
-    this.express.use(helmet());
-    this.express.use(cors());
-  }
-
-  async database() {
-    if (process.env.NODE_ENV === "test") {
-      const { MongoMemoryServer } = require('mongodb-memory-server');
-      const mongod = new MongoMemoryServer();
-      database.uri = await mongod.getConnectionString();
-    }
-    mongoose.connect(database.uri, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true
-    });
+    this.server.use(Sentry.Handlers.requestHandler());
+    this.server.use(express.json());
+    this.server.use(logger("dev"));
+    this.server.use(helmet());
+    this.server.use(cors());
   }
 
   routes() {
-    this.express.use(require("./routes"));
+    this.server.use("/api/v1", require("./routes"));
   }
 
   exception() {
     if (process.env.NODE_ENV !== "production")
-      this.express.use(Sentry.Handlers.errorHandler());
+      this.server.use(Sentry.Handlers.errorHandler());
 
-    this.express.use(async (err, req, res, next) => {
+    this.server.use(async (err, req, res, next) => {
       if (err instanceof validate.ValidationError) {
         return res.status(err.status).json(err);
       }
@@ -75,4 +62,6 @@ class App {
   }
 }
 
-module.exports = new App().express;
+const app = new App();
+
+module.exports = app;

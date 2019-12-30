@@ -6,7 +6,7 @@
 
 const debug = require("debug")(":server");
 const http = require("http");
-const app = require("./app");
+const { server: app } = require("./app");
 
 /**
  * Normalize a port into a number, string, or false.
