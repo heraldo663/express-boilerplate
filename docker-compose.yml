@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  app:
+    env_file:
+      - ./.env
+    depends_on:
+      - "mongodb"
+    build: .
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    command: npm start
+    volumes:
+      - .:/usr/src/app
+
+    restart: always
+
+  mongodb:
+    env_file:
+      - ./.env
+    image: "mongo:4.2"
+    volumes:
+      - /my/own/datadir:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME:  "${DB_USER}"
+      MONGO_INITDB_ROOT_PASSWORD: "${DB_PASS}"
+
+    restart: always
+
+
+volumes:
+  mongodb:
+  app:
