@@ -5,7 +5,7 @@ module.exports = async function() {
   if (process.env.NODE_ENV === "test") {
     const { MongoMemoryServer } = require("mongodb-memory-server");
     const mongod = new MongoMemoryServer();
-    databaseConfig.uri = await mongod.getConnectionString();
+    databaseConfig.uri = await mongod.getUri();
   }
   return mongoose.connect(databaseConfig.uri, {
     useNewUrlParser: true,

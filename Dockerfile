@@ -1,4 +1,4 @@
-FROM node:12.14-alpine
+FROM node:14.14-alpine
 
 WORKDIR /usr/src/app
 
@@ -8,4 +8,4 @@ RUN npm i --production
 
 EXPOSE ${PORT}
 
-CMD ['npm', 'start']
+CMD ["npm", "dev"]

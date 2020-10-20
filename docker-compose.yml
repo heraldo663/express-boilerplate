@@ -20,13 +20,14 @@ services:
       - ./.env
     image: "mongo:4.2"
     volumes:
-      - /my/own/datadir:/data/db
+      - mongodb:/data
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
     environment:
-      MONGO_INITDB_ROOT_USERNAME:  "${DB_USER}"
-      MONGO_INITDB_ROOT_PASSWORD: "${DB_PASS}"
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_DB_USER}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_DB_PASS}"
 
     restart: always
-
 
 volumes:
   mongodb:

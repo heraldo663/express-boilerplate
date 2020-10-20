@@ -1,13 +1,9 @@
-const Joi = require("joi");
+const { Joi } = require("express-validation");
 
 module.exports = {
-  body: {
-    email: Joi.string()
-      .email()
-      .required(),
+  body: Joi.object({
+    email: Joi.string().email().required(),
     name: Joi.string().required(),
-    password: Joi.string()
-      .required()
-      .min(6)
-  }
+    password: Joi.string().required().min(6),
+  }),
 };

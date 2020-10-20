@@ -7,6 +7,7 @@ const validate = require("express-validation");
 const Youch = require("youch");
 const Sentry = require("@sentry/node");
 const path = require("path");
+const { ValidationError } = require("express-validation");
 
 const sentry = require("./config/sentry");
 const database = require("./database");
@@ -24,7 +25,7 @@ class App {
 
   sentry() {
     Sentry.init({
-      dsn: sentry.dsn
+      dsn: sentry.dsn,
     });
   }
 
@@ -45,14 +46,14 @@ class App {
       this.server.use(Sentry.Handlers.errorHandler());
 
     this.server.use(async (err, req, res, next) => {
-      if (err instanceof validate.ValidationError) {
-        return res.status(err.status).json(err);
+      if (err instanceof ValidationError) {
+        return res.status(err.statusCode).json(err);
       }
 
       if (process.env.NODE_ENV !== "production") {
         const youch = new Youch(err, req);
 
-        return res.status(500).send(await youch.toHTML());
+        return res.status(500).send(err);
       }
 
       return res

@@ -1,5 +1,5 @@
 const express = require("express");
-const validate = require("express-validation");
+const { validate } = require('express-validation')
 const handle = require("express-async-handler");
 
 const authMiddelware = require("./app/middlewares/auth");
@@ -16,7 +16,7 @@ const routes = express.Router();
  * Root route
  */
 routes.get("/", (req, res) => {
-  res.send("Server online");
+  res.send("Server online").status("200");
 });
 /**
  * Register, Login Routes

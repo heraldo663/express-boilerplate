@@ -6,7 +6,6 @@ class SessionController {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-
     if (!user) {
       res.status(400).json({ errors: [{ msg: "User not found" }] });
     }
@@ -19,7 +18,7 @@ class SessionController {
       id: user._id,
       name: user.name,
       email: user.email,
-      token: User.generateToken(user)
+      token: User.generateToken(user),
     });
   }
 }

@@ -1,0 +1,18 @@
+POST http://localhost:4000/api/v1/users HTTP/1.1
+content-type: application/json
+
+{
+    "name": "sample",
+    "email": "heraldo@teste.com",
+    "password": "teste123"
+}
+
+###
+
+POST http://localhost:4000/api/v1/sessions HTTP/1.1
+content-type: application/json
+
+{
+    "email": "heraldo@teste.com",
+    "password": "teste123"
+}
