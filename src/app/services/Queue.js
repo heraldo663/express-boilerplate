@@ -1,14 +1,12 @@
-const kue = require("kue");
+const Bull = require("bull");
 const Sentry = require("@sentry/node");
 const jobs = require("../jobs");
 const redisConfig = require("../../config/redis");
 
-const Queue = kue.createQueue({
-  redis: redisConfig.redis
-});
+// const someQue = new Bull("queueName", {
+//   redis: { port: redisConfig.port, host: redisConfig.host },
+// });
 
-Queue.process(jobs.PurchaseMail.key, jobs.PurchaseMail.handle);
+// someQue.on("error", Sentry.captureException);
 
-Queue.on("error", Sentry.captureException);
-
-module.exports = Queue;
+// module.exports = Queue;

@@ -8,4 +8,4 @@ RUN npm i --production
 
 EXPOSE ${PORT}
 
-CMD ["npm", "dev"]
+CMD ["npm", "run", "dev"]

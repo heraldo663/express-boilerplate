@@ -6,6 +6,7 @@ services:
       - ./.env
     depends_on:
       - "mongodb"
+      - "redis"
     build: .
     ports:
       - "${APP_PORT}:${APP_PORT}"
@@ -20,15 +21,25 @@ services:
       - ./.env
     image: "mongo:4.2"
     volumes:
-      - mongodb:/data
+      - $PWD/data/mongodb:/data
     ports:
-      - "${DB_PORT}:${DB_PORT}"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_DB_USER}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_DB_PASS}"
+      - "${MONGO_DB_PORT}:${MONGO_DB_PORT}"
 
     restart: always
+
+  redis:
+    env_file:
+      - ./.env
+    image: "redis:alpine"
+    command: redis-server
+
+    ports:
+      - "6379:${REDIS_PORT}"
+
+    volumes:
+      - $PWD/data/redis-data:/var/lib/redis
 
 volumes:
   mongodb:
   app:
+  redis:

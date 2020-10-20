@@ -1,23 +1,24 @@
 require("dotenv").config();
 const express = require("express");
-const logger = require("morgan");
+// const logger = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
-const validate = require("express-validation");
 const Youch = require("youch");
 const Sentry = require("@sentry/node");
-const path = require("path");
-const { ValidationError } = require("express-validation");
 
+const { ValidationError } = require("express-validation");
+const expressWinston = require("express-winston");
+
+const winstonConfig = require("./config/winston");
 const sentry = require("./config/sentry");
 const database = require("./database");
 
 class App {
   constructor() {
     this.server = express();
-    this.connection = database();
+    this.db = database();
 
-    this.middleweares();
+    this.middleware();
     this.routes();
     this.exception();
     this.sentry();
@@ -29,10 +30,11 @@ class App {
     });
   }
 
-  middleweares() {
+  middleware() {
     this.server.use(Sentry.Handlers.requestHandler());
     this.server.use(express.json());
-    this.server.use(logger("dev"));
+
+    this.server.use(expressWinston.logger(winstonConfig));
     this.server.use(helmet());
     this.server.use(cors());
   }
